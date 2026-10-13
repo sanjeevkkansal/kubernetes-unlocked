@@ -1,0 +1,12 @@
+# Generated with: kubectl run web --image=nginx:1.30.5-alpine --dry-run=client -o yaml
+# Trimmed to what matters, and the image pinned by digest.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+  labels:
+    run: web
+spec:
+  containers:
+    - name: web
+      image: nginx:1.30.5-alpine@sha256:0985e772fb9f729e6fa0980da05fca5d9c468e870eed43071545afa9d2e27d94

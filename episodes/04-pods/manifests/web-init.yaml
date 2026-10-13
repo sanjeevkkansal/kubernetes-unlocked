@@ -1,0 +1,23 @@
+# An init container writes the page before nginx starts. Both mount the same emptyDir volume.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-init
+spec:
+  initContainers:
+    - name: write-page
+      image: busybox:1.38.0@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
+      # One command: if the write fails, the init container fails too.
+      command: ["sh", "-c", "sleep 10 && echo '<h1>Written by an init container</h1>' > /work/index.html"]
+      volumeMounts:
+        - name: html
+          mountPath: /work
+  containers:
+    - name: nginx
+      image: nginx:1.30.5-alpine@sha256:0985e772fb9f729e6fa0980da05fca5d9c468e870eed43071545afa9d2e27d94
+      volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html
+  volumes:
+    - name: html
+      emptyDir: {}

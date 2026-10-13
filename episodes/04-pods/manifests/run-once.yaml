@@ -1,0 +1,22 @@
+# Two pods that run once and stop (restartPolicy: Never). One succeeds, one fails.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: succeeds
+spec:
+  restartPolicy: Never
+  containers:
+    - name: task
+      image: busybox:1.38.0@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
+      command: ["sh", "-c", "echo working; sleep 3; echo done"]
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fails
+spec:
+  restartPolicy: Never
+  containers:
+    - name: task
+      image: busybox:1.38.0@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
+      command: ["sh", "-c", "echo working; sleep 3; echo something went wrong; exit 3"]

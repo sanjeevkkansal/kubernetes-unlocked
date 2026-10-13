@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+
+# Editors
+.idea/
+*.swp
+
+# Credentials and local config. Never commit these.
+.env
+.env.*
+kubeconfig
+*.kubeconfig
+*.pem
+*.key
+
+# Video and audio never go in this repo
+*.mp4
+*.mov
+*.mkv
+*.mp3
+*.wav
+
+# Scratch
+tmp/

@@ -1,0 +1,17 @@
+# Solution: a pod that does its work and finishes, with a native sidecar beside it.
+# Started from: kubectl run worker --image=busybox:1.38.0 --restart=Never --dry-run=client -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: worker
+spec:
+  restartPolicy: Never
+  initContainers:
+    - name: clock
+      image: busybox:1.38.0@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
+      restartPolicy: Always
+      command: ["sh", "-c", "trap 'exit 0' TERM; while true; do date; sleep 5; done"]
+  containers:
+    - name: work
+      image: busybox:1.38.0@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
+      command: ["sh", "-c", "echo working; sleep 20; echo done"]

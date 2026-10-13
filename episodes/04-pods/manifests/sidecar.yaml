@@ -1,0 +1,24 @@
+# nginx plus a sidecar that follows its access log. A sidecar is an init container with
+# restartPolicy: Always: it starts first and keeps running beside the app.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sidecar
+spec:
+  initContainers:
+    - name: log-shipper
+      image: busybox:1.38.0@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
+      restartPolicy: Always
+      command: ["tail", "-F", "/var/log/nginx/access.log"]
+      volumeMounts:
+        - name: logs
+          mountPath: /var/log/nginx
+  containers:
+    - name: nginx
+      image: nginx:1.30.5-alpine@sha256:0985e772fb9f729e6fa0980da05fca5d9c468e870eed43071545afa9d2e27d94
+      volumeMounts:
+        - name: logs
+          mountPath: /var/log/nginx
+  volumes:
+    - name: logs
+      emptyDir: {}

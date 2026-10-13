@@ -1,0 +1,23 @@
+# A Deployment. You declare 3 copies; Kubernetes keeps 3 running.
+# No resource limits, probes or security settings yet. Those come later in the series.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.30.5-alpine@sha256:0985e772fb9f729e6fa0980da05fca5d9c468e870eed43071545afa9d2e27d94
+          ports:
+            - containerPort: 80

@@ -1,0 +1,21 @@
+# The same pod with DATABASE_URL set.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: api
+spec:
+  containers:
+    - name: app
+      image: busybox:1.38.0@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
+      env:
+        - name: DATABASE_URL
+          value: postgres://db:5432/unlocked
+      command:
+        - sh
+        - -c
+        - |
+          trap "exit 0" TERM
+          echo "starting api"
+          if [ -z "$DATABASE_URL" ]; then echo "FATAL: DATABASE_URL is not set"; exit 1; fi
+          echo "connected to $DATABASE_URL"
+          while true; do sleep 1; done
